@@ -30,7 +30,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/futbolcukim" element={<StartScreen />} />
-        <Route path="/futbolcukim/game/:mode" element={<GameScreen />} />
+        <Route path="/game/:mode" element={<GameScreen />} />
       </Routes>
     </Router>
   );

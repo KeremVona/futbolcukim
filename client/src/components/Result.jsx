@@ -19,7 +19,7 @@ export default function Result({
   }, [isCorrect]);
 
   const handleReturnToStart = () => {
-    navigate("/");
+    navigate("/futbolcukim");
   };
 
   return (

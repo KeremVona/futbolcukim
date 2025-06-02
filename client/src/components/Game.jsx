@@ -128,7 +128,7 @@ export default function Game({ initialMode }) {
       </div>
       <div className="flex justify-center mb-4">
         <button
-          onClick={() => navigate && navigate("/")}
+          onClick={() => navigate && navigate("/futbolcukim")}
           className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold shadow"
         >
           Başlangıca geri dön
