@@ -29,8 +29,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<StartScreen />} />
-        <Route path="/game/:mode" element={<GameScreen />} />
+        <Route path="/futbolcukim" element={<StartScreen />} />
+        <Route path="/futbolcukim/game/:mode" element={<GameScreen />} />
       </Routes>
     </Router>
   );
