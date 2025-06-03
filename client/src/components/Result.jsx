@@ -64,6 +64,33 @@ export default function Result({
           >
             Başlangıca git
           </button>
+          <button
+            onClick={() => {
+              const shareText = `Futbolcu kim oyununda ${streak} art arda doğru bildim! Sen de dene: https://keremvona.github.io/futbolcukim/`;
+              // WhatsApp share
+              if (navigator.userAgent.toLowerCase().includes("whatsapp")) {
+                window.open(
+                  `https://wa.me/?text=${encodeURIComponent(shareText)}`,
+                  "_blank"
+                );
+                return;
+              }
+              // Web Share API
+              if (navigator.share) {
+                navigator.share({
+                  title: "Futbolcu Kim?",
+                  text: shareText,
+                  url: "https://keremvona.github.io/futbolcukim/",
+                });
+              } else {
+                navigator.clipboard.writeText(shareText);
+                alert("Paylaşım panoya kopyalandı!");
+              }
+            }}
+            className="px-8 py-3 bg-green-500 text-white rounded-lg font-semibold shadow hover:bg-green-600 transition-all text-lg"
+          >
+            Paylaş
+          </button>
         </div>
       </div>
     </div>

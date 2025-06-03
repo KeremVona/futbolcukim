@@ -34,6 +34,7 @@ export default function Start({ onStart }) {
               >
                 <option value="superlig">Süper Lig (Güncel Oyuncular)</option>
                 <option value="alltime">Tüm Zamanlar</option>
+                <option value="timed">Zamanlı Mod (2 Dakika)</option>
               </select>
             </div>
             <div className="rounded-md shadow lg:ml-2">
@@ -44,14 +45,36 @@ export default function Start({ onStart }) {
                 Oyuna başla
               </button>
             </div>
-            {/*<div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-              <a
-                href="#"
+            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+              <button
+                type="button"
+                onClick={() => {
+                  const shareText = `Futbolcu Kim oyununu dene! Süper Lig ve efsane futbolcuları tahmin et: https://keremvona.github.io/futbolcukim/`;
+                  // WhatsApp share
+                  if (navigator.userAgent.toLowerCase().includes("whatsapp")) {
+                    window.open(
+                      `https://wa.me/?text=${encodeURIComponent(shareText)}`,
+                      "_blank"
+                    );
+                    return;
+                  }
+                  // Web Share API
+                  if (navigator.share) {
+                    navigator.share({
+                      title: "Futbolcu Kim?",
+                      text: shareText,
+                      url: "https://keremvona.github.io/futbolcukim/",
+                    });
+                  } else {
+                    navigator.clipboard.writeText(shareText);
+                    alert("Paylaşım panoya kopyalandı!");
+                  }
+                }}
                 className="flex items-center justify-center w-full px-8 py-3 text-base font-medium leading-6 text-blue-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-blue-600 focus:outline-none focus:shadow-outline-blue md:py-4 md:text-lg md:px-10"
               >
-                Nasıl oynanır
-              </a>
-            </div>*/}
+                Arkadaşlarınla paylaş
+              </button>
+            </div>
           </form>
         </div>
       </div>
