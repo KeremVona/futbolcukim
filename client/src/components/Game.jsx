@@ -57,7 +57,14 @@ export default function Game({ initialMode }) {
     }
     const filtered = playerList
       .map((p) => p.name)
-      .filter((name) => name.toLowerCase().startsWith(value.toLowerCase()));
+      .filter((name) => {
+        const lowerValue = value.toLowerCase();
+        const lowerName = name.toLowerCase();
+        const lastName = name.split(" ").slice(-1)[0].toLowerCase();
+        return (
+          lowerName.startsWith(lowerValue) || lastName.startsWith(lowerValue)
+        );
+      });
     setSuggestions(filtered);
     setHighlightedIndex(0);
   };
