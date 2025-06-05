@@ -3,8 +3,9 @@ import { playersSuperLig } from "../../playersSuperLig";
 import { playersAllTime } from "../../playersAllTime";
 import Result from "./Result";
 import { useParams, useNavigate } from "react-router-dom";
+import { locales } from "../locales";
 
-export default function Game({ initialMode }) {
+export default function Game({ initialMode, lang }) {
   const params = useParams ? useParams() : {};
   const urlMode = params.mode;
   const mode = urlMode || initialMode || "superlig";
@@ -30,6 +31,30 @@ export default function Game({ initialMode }) {
   const [extraHints, setExtraHints] = useState(0);
   const [points, setPoints] = useState(100);
   const navigate = useNavigate ? useNavigate() : null;
+
+  // Language detection
+  const [language, setLanguage] = useState(
+    lang ||
+      (navigator.language && navigator.language.startsWith("tr")
+        ? "tr"
+        : navigator.language.startsWith("ar")
+        ? "ar"
+        : navigator.language.startsWith("de")
+        ? "de"
+        : navigator.language.startsWith("it")
+        ? "it"
+        : navigator.language.startsWith("fr")
+        ? "fr"
+        : navigator.language.startsWith("es")
+        ? "es"
+        : navigator.language.startsWith("pt")
+        ? "pt"
+        : navigator.language.startsWith("ru")
+        ? "ru"
+        : "en")
+  );
+
+  const t = locales[language]?.game || locales.en.game;
 
   const maxGuesses = 5;
   const hints = [
@@ -176,27 +201,27 @@ export default function Game({ initialMode }) {
       <div className="flex flex-col items-center mt-12 relative">
         <div className="w-full max-w-lg p-8 bg-white rounded-2xl shadow-2xl border border-blue-200 flex flex-col items-center relative">
           <h2 className="text-3xl font-extrabold mb-6 tracking-wide text-blue-700">
-            Süre doldu!
+            {t.timeUp}
           </h2>
           <div className="mb-4 text-xl text-gray-700 text-center">
-            Toplam doğru:{" "}
+            {t.totalCorrect}{" "}
             <span className="font-bold text-green-600">{correctCount}</span>
           </div>
           <div className="mb-4 text-xl text-gray-700 text-center">
-            Toplam yanlış:{" "}
+            {t.totalWrong}{" "}
             <span className="font-bold text-red-600">{wrongCount}</span>
           </div>
           <button
             onClick={() => window.location.reload()}
             className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg font-semibold shadow hover:from-blue-600 hover:to-blue-800 transition-all text-lg mt-4"
           >
-            Tekrar Oyna
+            {t.playAgain}
           </button>
           <button
             onClick={() => navigate && navigate("/futbolcukim")}
             className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold shadow hover:bg-gray-300 transition-all text-lg mt-4"
           >
-            Başlangıca git
+            {t.goToStart}
           </button>
         </div>
       </div>
@@ -219,23 +244,25 @@ export default function Game({ initialMode }) {
       {timedMode && (
         <div className="flex flex-col items-center mb-4">
           <div className="text-2xl font-bold text-blue-700 mb-2">
-            Kalan Süre: {Math.floor(timeLeft / 60)}:
+            {t.timeLeft}: {Math.floor(timeLeft / 60)}:
             {(timeLeft % 60).toString().padStart(2, "0")}
           </div>
           <div className="flex gap-6 mb-2">
             <span className="text-green-600 font-bold">
-              Doğru: {correctCount}
+              {t.correct}: {correctCount}
             </span>
-            <span className="text-red-600 font-bold">Yanlış: {wrongCount}</span>
+            <span className="text-red-600 font-bold">
+              {t.wrong}: {wrongCount}
+            </span>
           </div>
         </div>
       )}
       <div className="mb-2 text-blue-600 font-bold text-2xl text-center tracking-wide drop-shadow-sm">
         <span className="inline-block px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow">
-          Art arda: {streak}
+          {t.streak}: {streak}
         </span>
         <span className="inline-block px-4 py-1 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full shadow ml-2">
-          Puan: {points}
+          {t.points}: {points}
         </span>
       </div>
       <div className="flex justify-center mb-4 gap-4">
@@ -243,7 +270,7 @@ export default function Game({ initialMode }) {
           onClick={() => navigate && navigate("/futbolcukim")}
           className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold shadow"
         >
-          Başlangıca geri dön
+          {t.backToStart}
         </button>
         <button
           type="button"
@@ -251,12 +278,12 @@ export default function Game({ initialMode }) {
           disabled={hintsToShow >= hints.length || points <= 0}
           className="px-4 py-2 bg-yellow-400 text-white rounded font-semibold shadow hover:bg-yellow-500 transition-all text-lg disabled:opacity-50"
         >
-          İpucu Al (-10 puan)
+          {t.getHint}
         </button>
       </div>
       <div className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-blue-100 max-w-xl mx-auto">
         <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">
-          İp uçları
+          {t.hints}
         </h2>
         <ul className="list-disc pl-8 space-y-2">
           {hints.slice(0, hintsToShow).map((hint, idx) => (
@@ -272,7 +299,7 @@ export default function Game({ initialMode }) {
       >
         <label htmlFor="player-guess" className="w-full">
           <span className="block text-base font-medium text-gray-700 mb-1">
-            Futbolcuyu tahmin et
+            {t.guessPlayer}
           </span>
           <div className="relative">
             <input
@@ -284,7 +311,7 @@ export default function Game({ initialMode }) {
               onKeyDown={handleInputKeyDown}
               disabled={guesses.length >= maxGuesses}
               autoComplete="off"
-              placeholder="Bir futbolcunun ismini yaz..."
+              placeholder={t.placeholder}
             />
             {suggestions.length > 0 && (
               <ul className="absolute left-0 right-0 mt-1 bg-white border border-blue-200 rounded shadow z-20 max-h-48 overflow-y-auto">
@@ -313,7 +340,7 @@ export default function Game({ initialMode }) {
           className="mt-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg font-semibold shadow hover:from-blue-600 hover:to-blue-800 transition-all text-lg disabled:opacity-50"
           disabled={guesses.length >= maxGuesses}
         >
-          Tahmini gönder
+          {t.sendGuess}
         </button>
         {timedMode && (
           <button
@@ -321,13 +348,13 @@ export default function Game({ initialMode }) {
             onClick={handleSkip}
             className="mt-2 px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold shadow hover:bg-yellow-500 transition-all text-lg"
           >
-            Soruyu Geç
+            {t.skip}
           </button>
         )}
       </form>
       <div className="mt-8 max-w-xl mx-auto p-4 bg-white rounded-lg shadow border border-blue-100">
         <h2 className="text-lg font-semibold mb-2 text-blue-700">
-          Tahminler{" "}
+          {t.guesses}{" "}
           <span className="text-gray-500">
             ({guesses.length}/{maxGuesses})
           </span>
@@ -341,7 +368,7 @@ export default function Game({ initialMode }) {
           ))}
         </ul>
         <div className="mt-2 text-red-600 font-semibold text-center">
-          {guesses.length >= maxGuesses && !showResult && "No guesses left!"}
+          {guesses.length >= maxGuesses && !showResult && t.noGuesses}
         </div>
       </div>
     </>

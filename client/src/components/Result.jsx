@@ -1,12 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { locales } from "../locales";
 
 export default function Result({
   isCorrect,
   correctName,
   onPlayAgain,
   streak,
+  lang,
 }) {
+  // Language detection
+  const [language] = useState(
+    lang ||
+      (navigator.language && navigator.language.startsWith("tr")
+        ? "tr"
+        : navigator.language.startsWith("ar")
+        ? "ar"
+        : navigator.language.startsWith("de")
+        ? "de"
+        : navigator.language.startsWith("it")
+        ? "it"
+        : navigator.language.startsWith("fr")
+        ? "fr"
+        : navigator.language.startsWith("es")
+        ? "es"
+        : navigator.language.startsWith("pt")
+        ? "pt"
+        : navigator.language.startsWith("ru")
+        ? "ru"
+        : "en")
+  );
+  const t = locales[language]?.result || locales.en.result;
+
   const [showEffect, setShowEffect] = useState(false);
   const navigate = useNavigate();
 
@@ -37,36 +62,34 @@ export default function Result({
             isCorrect ? "text-green-600" : "text-red-600"
           }`}
         >
-          {isCorrect ? "Tebrikler!" : "Oyun bitti"}
+          {isCorrect ? t.congrats : t.gameOver}
         </h2>
         <div className="mb-4 text-xl text-gray-700 text-center">
-          {isCorrect
-            ? "Futbolcuyu doğru tahmin ettin!"
-            : "Futbolcuyu doğru tahmin etmedin!"}
+          {isCorrect ? t.correctGuess : t.wrongGuess}
         </div>
         <div className="mb-4 text-lg text-gray-800 bg-blue-50 rounded px-4 py-2 shadow-inner">
-          Doğru cevap:{" "}
+          {t.answer}{" "}
           <span className="font-bold text-blue-700">{correctName}</span>
         </div>
         <div className="mb-6 text-blue-600 font-bold text-xl bg-blue-100 rounded-full px-6 py-2 shadow">
-          Art arda: {streak}
+          {t.streak} {streak}
         </div>
         <div className="flex gap-4 mt-2 w-full justify-center">
           <button
             onClick={onPlayAgain}
             className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg font-semibold shadow hover:from-blue-600 hover:to-blue-800 transition-all text-lg"
           >
-            Bir daha oyna
+            {t.playAgain}
           </button>
           <button
             onClick={handleReturnToStart}
             className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold shadow hover:bg-gray-300 transition-all text-lg"
           >
-            Başlangıca git
+            {t.goToStart}
           </button>
           <button
             onClick={() => {
-              const shareText = `Futbolcu kim oyununda ${streak} art arda doğru bildim! Sen de dene: https://keremvona.github.io/futbolcukim/`;
+              const shareText = t.shareText(streak);
               // WhatsApp share
               if (navigator.userAgent.toLowerCase().includes("whatsapp")) {
                 window.open(
@@ -84,12 +107,12 @@ export default function Result({
                 });
               } else {
                 navigator.clipboard.writeText(shareText);
-                alert("Paylaşım panoya kopyalandı!");
+                alert(t.copied);
               }
             }}
             className="px-8 py-3 bg-green-500 text-white rounded-lg font-semibold shadow hover:bg-green-600 transition-all text-lg"
           >
-            Paylaş
+            {t.share}
           </button>
         </div>
       </div>

@@ -13,16 +13,22 @@ import Game from "./components/Game";
 
 function StartScreen() {
   const navigate = useNavigate();
+  // Detect browser language
+  const lang =
+    navigator.language && navigator.language.startsWith("tr") ? "tr" : "en";
   const handleStart = (mode) => {
     navigate(`/game/${mode}`);
   };
-  return <Start onStart={handleStart} />;
+  return <Start onStart={handleStart} lang={lang} />;
 }
 
 function GameScreen() {
   // Get mode from URL
   const mode = window.location.pathname.split("/").pop();
-  return <Game initialMode={mode} />;
+  // Detect browser language
+  const lang =
+    navigator.language && navigator.language.startsWith("tr") ? "tr" : "en";
+  return <Game initialMode={mode} lang={lang} />;
 }
 
 function App() {
